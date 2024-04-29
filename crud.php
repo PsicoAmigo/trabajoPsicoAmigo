@@ -11,9 +11,19 @@ function obtenerDatosUsuario($user_id) {
 }
 
 // Función para actualizar perfil de usuario
-function actualizarPerfilUsuario($user_id, $direccion, $telefono, $ocupacion, $estado) {
+function actualizarPerfilUsuario($user_id, $nombre, $apellido, $email, $birthdate, $direccion, $telefono, $ocupacion, $estado) {
     global $conexion;
     $sql = "INSERT INTO perfil (user_id, direccion, telefono, ocupacion, estado) VALUES ($user_id, '$direccion', '$telefono', '$ocupacion', '$estado') ON DUPLICATE KEY UPDATE direccion='$direccion', telefono='$telefono', ocupacion='$ocupacion', estado='$estado'";
+    $result = mysqli_query($conexion, $sql);
+    // Actualizar nombre, apellido, correo y fecha de nacimiento en la tabla register
+    $sql_register = "UPDATE register SET name='$nombre', surname='$apellido', email='$email', birthdate='$birthdate' WHERE id=$user_id";
+    return mysqli_query($conexion, $sql_register);
+}
+
+// Función para eliminar los datos del usuario
+function eliminarDatosUsuario($user_id) {
+    global $conexion;
+    $sql = "DELETE FROM perfil WHERE user_id=$user_id";
     return mysqli_query($conexion, $sql);
 }
 
@@ -21,17 +31,31 @@ function actualizarPerfilUsuario($user_id, $direccion, $telefono, $ocupacion, $e
 $user_id = 1; // Ejemplo
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recibir datos del formulario
-    $direccion = $_POST['direccion'];
-    $telefono = $_POST['telefono'];
-    $ocupacion = $_POST['ocupacion'];
-    $estado = $_POST['estado'];
-
-    // Actualizar perfil del usuario
-    if (actualizarPerfilUsuario($user_id, $direccion, $telefono, $ocupacion, $estado)) {
-        echo "Perfil actualizado exitosamente.";
+    // Verificar si se presionó el botón de eliminar
+    if (isset($_POST['eliminar'])) {
+        // Eliminar los datos del usuario
+        if (eliminarDatosUsuario($user_id)) {
+            echo "Datos eliminados exitosamente.";
+        } else {
+            echo "Error al eliminar los datos.";
+        }
     } else {
-        echo "Error al actualizar el perfil.";
+        // Recibir datos del formulario
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+        $email = $_POST['email'];
+        $birthdate = $_POST['birthdate'];
+        $direccion = $_POST['direccion'];
+        $telefono = $_POST['telefono'];
+        $ocupacion = $_POST['ocupacion'];
+        $estado = $_POST['estado'];
+
+        // Actualizar perfil del usuario
+        if (actualizarPerfilUsuario($user_id, $nombre, $apellido, $email, $birthdate, $direccion, $telefono, $ocupacion, $estado)) {
+            echo "Perfil actualizado exitosamente.";
+        } else {
+            echo "Error al actualizar el perfil.";
+        }
     }
 }
 
@@ -41,11 +65,16 @@ if ($datosUsuario) {
     // Mostrar los datos en el formulario HTML
     ?>
     <form method="post">
+        Nombre: <input type="text" name="nombre" value="<?php echo $datosUsuario['name']; ?>"><br>
+        Apellido: <input type="text" name="apellido" value="<?php echo $datosUsuario['surname']; ?>"><br>
+        Correo Electrónico: <input type="text" name="email" value="<?php echo $datosUsuario['email']; ?>"><br>
+        Fecha de Nacimiento: <input type="date" name="birthdate" value="<?php echo $datosUsuario['birthdate']; ?>"><br>
         Dirección: <input type="text" name="direccion" value="<?php echo $datosUsuario['direccion']; ?>"><br>
         Teléfono: <input type="text" name="telefono" value="<?php echo $datosUsuario['telefono']; ?>"><br>
         Ocupación: <input type="text" name="ocupacion" value="<?php echo $datosUsuario['ocupacion']; ?>"><br>
         Estado: <input type="text" name="estado" value="<?php echo $datosUsuario['estado']; ?>"><br>
         <input type="submit" value="Actualizar">
+        <button type="submit" name="eliminar">Eliminar Datos</button>
         <a href="inicio.html" class="btn btn-primary">Regresar</a>
     </form>
     <?php
