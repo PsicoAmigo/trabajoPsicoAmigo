@@ -1,5 +1,5 @@
 <?php 
-
+    $conexion =mysqli_connect("localhost", "root","","psicoamigo");
     //conexion al registro
     function conn(){
         $hostname="localhost";

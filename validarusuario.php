@@ -1,6 +1,5 @@
 <?php
 
-//session_start();
 include('conexion_be.php');
 
 $USUARIO=$_POST['email'];
@@ -19,10 +18,10 @@ if($filas == 1){
     if (password_verify($PASSWORD, $dato['password'])) {
         header("location:inicio.html",200);
     } else {
-        echo "Los datos ingresado son invalidos.";
+        echo "Los datos ingresado son invalidos.",400;
     }
 }else{
-    include("index.php"); //400
+    include("index.php",400); //400
     echo "se fue por el else.";
 }
 //mysqli_free_result($resultado);
