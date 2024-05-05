@@ -1,7 +1,15 @@
 <?php
+session_start(); // Iniciar sesión
+$user_id = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : false;
+
+// Si no hay ID en la sesión, redirigir a login o mostrar mensaje
+if (!$user_id) {
+  // Redirigir a login o mostrar mensaje de error
+  header("Location: login.php"); // Ejemplo de redirección
+  exit();
+}
 // Conexión a la base de datos (incluye tu archivo de conexión)
 include('conexion_be.php');
-
 // Función para obtener datos del usuario y perfil por ID
 function obtenerDatosUsuario($user_id) {
     global $conexion;
@@ -11,7 +19,7 @@ function obtenerDatosUsuario($user_id) {
 }
 
 // Obtener el ID del usuario (puedes obtenerlo de la sesión, por ejemplo)
-$user_id = 1; // Ejemplo
+//$user_id = 7; // Ejemplo
 
 // Obtener y mostrar los datos del usuario
 $datosUsuario = obtenerDatosUsuario($user_id);

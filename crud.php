@@ -2,6 +2,8 @@
 // Conexión a la base de datos (incluye tu archivo de conexión)
 include('conexion_be.php');
 
+ // se almacena el id del usuario en un array
+
 // Función para obtener datos del usuario y perfil por ID
 function obtenerDatosUsuario($user_id) {
     global $conexion;
@@ -23,12 +25,13 @@ function actualizarPerfilUsuario($user_id, $nombre, $apellido, $email, $birthdat
 // Función para eliminar los datos del usuario
 function eliminarDatosUsuario($user_id) {
     global $conexion;
-    $sql = "DELETE FROM perfil WHERE user_id=$user_id";
+    $sql = "DEL
+    ETE FROM perfil WHERE user_id=$user_id";
     return mysqli_query($conexion, $sql);
 }
 
 // Obtener el ID del usuario (puedes obtenerlo de la sesión, por ejemplo)
-$user_id = 1; // Ejemplo
+$user_id = 7; // Ejemplo
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar si se presionó el botón de eliminar
