@@ -34,6 +34,4 @@ if ($resultado) {
 }
 
 mysqli_close($conecta); // Close the connection (good practice)
-
-
-
+?>
